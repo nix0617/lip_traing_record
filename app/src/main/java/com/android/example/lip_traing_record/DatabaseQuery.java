@@ -1,69 +1,56 @@
 package com.android.example.lip_traing_record;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseQuery {
-    SQLiteDatabase db;
-    String sql;
-    Cursor cursor = null;
-    String[] columns = { "word", "isCorrect", "date", "time"};
-    String dataStr = String.format("%4s %-10s %7s\n", "sID", "sName", "sGender");
+public class DatabaseQuery extends SQLiteOpenHelper {
+
+    private static final String TABLE_NAME = "record";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_WORD = "word";
+    private static final String COLUMN_ISCORRECT = "isCorrect";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_TIME = "time";
+
 
     Context mContext;
-    int i;
 
-    DatabaseQuery(){
-        db = SQLiteDatabase.openDatabase("/data/data/com.android.example.lip_traing_record/databases/game", null, SQLiteDatabase.CREATE_IF_NECESSARY);
+
+    DatabaseQuery(Context mContext) {
+        super(mContext, "game", null, 1);
+
+
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String sql = ("CREATE TABLE GamesLog(gameID int PRIMARY KEY, playDate text, playTime text, duration int, winningStatus int); ");
+        sqLiteDatabase.execSQL(sql);
 
-    DatabaseQuery(Context mContext){
-
-        // super(mContext,dataBase,null,1);
-        this.mContext = mContext;
-
-        try {
-            db = SQLiteDatabase.openDatabase("/data/data/com.example.tic_tac_teo/databases/game", null, SQLiteDatabase.CREATE_IF_NECESSARY);
-            sql = ("CREATE TABLE GamesLog(gameID int PRIMARY KEY, playDate text, playTime text, duration int, winningStatus int); ");
-            db.execSQL(sql);
-        }catch (SQLiteException e){
-            // PlayActivity.showMessage(mContext, e.getMessage());
-        }
     }
 
-    public void storeData(String date,String time,int duration,int status){
-        try {
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
-            //get the count of row
-            i =   db.rawQuery("select * from GamesLog",null).getCount();
-            //PlayActivity.showMessage(mContext, String.valueOf(i));
-
-            sql = ("INSERT INTO GamesLog(gameID,playDate,playTime,duration,winningStatus) values " + "('"+i+"','"+date+"','"+time+"',"+duration+","+status+");");
-            db.execSQL(sql);
-
-
-        }catch (SQLiteException e){
-            //PlayActivity.showMessage(mContext, e.getMessage());
-        }
-    }
-    public Cursor getAllData(){
-
-        try{
-            cursor = db.rawQuery("select * from GamesLog",null);
-
-        }catch (Exception e){
-
-        }
-        return cursor;
     }
 
+    /*public String addOne(Record record){
+        ContentValues cv = new ContentValues();
 
+        cv.put(COLUMN_ID,record.getId());
+        cv.put(COLUMN_ISCORRECT,record.getIsCorrect());
+        cv.put(COLUMN_WORD,record.getWord());
+        cv.put(COLUMN_DATE,record.getDate());
+        cv.put(COLUMN_TIME,record.getTime());
+        //cv.put();
 
+    }*/
 }
