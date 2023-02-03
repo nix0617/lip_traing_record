@@ -37,7 +37,7 @@ public class RecordAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.mlistview = mlistview;
         databaseQuery = new DatabaseQuery(mContext);
-        //insertDB("word6",0);
+        insertDB("word8",1);
         updateArraylist();
     }
 
