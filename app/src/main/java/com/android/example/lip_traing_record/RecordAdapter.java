@@ -40,6 +40,13 @@ public class RecordAdapter extends BaseAdapter {
     }
 
     public void updateArraylist(){
+        //insertDB();
+        databaseQuery.getDatabaseRecord();
+        words = databaseQuery.getWords();
+        iscorrect = databaseQuery.getIscorrect();
+    }
+
+    public void insertDB(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         String date = sdf.format(c.getTime());
@@ -48,11 +55,9 @@ public class RecordAdapter extends BaseAdapter {
         String time = dateFormat(currentTime);
 
         Record record = new Record("word5",1,date,time);
-        databaseQuery.getDatabaseRecord();
         databaseQuery.insertRecord(record);
-        words = databaseQuery.getWords();
-        iscorrect = databaseQuery.getIscorrect();
     }
+
 
     public String dateFormat(Date currentTime){
         String hour;
@@ -61,7 +66,6 @@ public class RecordAdapter extends BaseAdapter {
         hour = String.valueOf(currentTime.getHours());
         minute = String.valueOf(currentTime.getMinutes());
         second = String.valueOf(currentTime.getSeconds());
-      //  Log.d("rhierjhritrjhrij");
         return hour + ":" + minute + ":" + second;
     }
 
