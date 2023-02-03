@@ -15,13 +15,15 @@ import java.util.List;
 public class DatabaseQuery extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME = "Record";
+    private static final String COLUMN_ID = "gameID";
     private static final String COLUMN_WORD = "word";
-    private static final String COLUMN_ISCORRECT = "isCorrect";
+    private static final String COLUMN_ISCORRECT = "iscorrect";
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_TIME = "time";
 
     private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> iscorrect = new ArrayList<String>();
+    private ArrayList<String> id = new ArrayList<String>();
 
     Context mContext;
 
@@ -32,7 +34,7 @@ public class DatabaseQuery extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = ("CREATE TABLE Record(gameID INTEGER PRIMARY KEY AUTOINCREMENT, word text, isCorrect int, date text, time text); ");
+        String sql = ("CREATE TABLE Record(gameID INTEGER PRIMARY KEY AUTOINCREMENT, word text, iscorrect int, date text, time text); ");
        // String sql = ("CREATE TABLE GamesLog(gameID int PRIMARY KEY, playDate text, playTime text, duration int, winningStatus int); ");
         sqLiteDatabase.execSQL(sql);
     }
@@ -48,11 +50,17 @@ public class DatabaseQuery extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
         c.moveToFirst();
         for(int i=0;i<c.getCount();i++){
+            id.add(c.getString(0));
             words.add(c.getString(1));
             iscorrect.add(c.getString(2));
             c.moveToNext();
         }
     }
+
+    public ArrayList<String> getId(){
+        return id;
+    }
+
 
     public ArrayList<String> getWords(){
        return words;
@@ -76,6 +84,11 @@ public class DatabaseQuery extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, values);
         //String query = ("INSERT INTO GamesLog('12', 'ok' );");
         //db.execSQL(query);
+    }
+
+    public void deleteRecord(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, COLUMN_ID + "=" + id,null);
     }
 
     /*public String addOne(Record record){

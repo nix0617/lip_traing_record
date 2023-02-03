@@ -31,6 +31,7 @@ public class RecordAdapter extends BaseAdapter {
     private ListView mlistview;
     private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> iscorrect = new ArrayList<String>();
+    private ArrayList<String> id = new ArrayList<String>();
 
     public RecordAdapter(Context mContext, ListView mlistview) {
         this.mContext = mContext;
@@ -42,6 +43,7 @@ public class RecordAdapter extends BaseAdapter {
     public void updateArraylist(){
         //insertDB();
         databaseQuery.getDatabaseRecord();
+        id = databaseQuery.getId();
         words = databaseQuery.getWords();
         iscorrect = databaseQuery.getIscorrect();
     }
@@ -52,14 +54,16 @@ public class RecordAdapter extends BaseAdapter {
         String date = sdf.format(c.getTime());
 
         Date currentTime = Calendar.getInstance().getTime();
-        String time = dateFormat(currentTime);
+        String time = ToDBTimeFormat(currentTime);
 
         Record record = new Record("word5",1,date,time);
         databaseQuery.insertRecord(record);
     }
 
 
-    public String dateFormat(Date currentTime){
+
+
+    public String ToDBTimeFormat(Date currentTime){
         String hour;
         String minute;
         String second;
@@ -92,16 +96,28 @@ public class RecordAdapter extends BaseAdapter {
         myView.findViewById(R.id.red_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Toast.makeText(mContext, "click delete" + i, Toast.LENGTH_SHORT).show();
+                TextView idView =  myView.findViewById(R.id.position_id);
+                String position = idView.getText().toString();
+                Toast.makeText(mContext, "the index is " + i + " the position is "+ position, Toast.LENGTH_SHORT).show();
+                databaseQuery.deleteRecord(position);
+                id.remove(i);
                 words.remove(i);
                 iscorrect.remove(i);
                 notifyDataSetChanged();
             }
         });
+        TextView idView =  myView.findViewById(R.id.position_id);
+        idView.setText(id.get(i));
         TextView word =  myView.findViewById(R.id.text_data);
         word.setText("Lip Training Record: Word: "+words.get(i));
         TextView correct =  myView.findViewById(R.id.correctly);
-        correct.setText("Correctly: "+ iscorrect.get(i));
+        String correctly;
+        if(iscorrect.get(i).equals("1")){
+            correctly = "Correct";
+        }else {
+            correctly = "Incorrect";
+        }
+        correct.setText("Correctly: "+ correctly);
         return myView;
     }
 }
