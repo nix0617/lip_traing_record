@@ -37,6 +37,7 @@ public class RecordAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.mlistview = mlistview;
         databaseQuery = new DatabaseQuery(mContext);
+        //insertDB("word6",0);
         updateArraylist();
     }
 
@@ -48,7 +49,7 @@ public class RecordAdapter extends BaseAdapter {
         iscorrect = databaseQuery.getIscorrect();
     }
 
-    public void insertDB(){
+    public void insertDB(String word, int isCorrect){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         String date = sdf.format(c.getTime());
@@ -56,12 +57,9 @@ public class RecordAdapter extends BaseAdapter {
         Date currentTime = Calendar.getInstance().getTime();
         String time = ToDBTimeFormat(currentTime);
 
-        Record record = new Record("word5",1,date,time);
+        Record record = new Record(word,isCorrect,date,time);
         databaseQuery.insertRecord(record);
     }
-
-
-
 
     public String ToDBTimeFormat(Date currentTime){
         String hour;
@@ -72,7 +70,6 @@ public class RecordAdapter extends BaseAdapter {
         second = String.valueOf(currentTime.getSeconds());
         return hour + ":" + minute + ":" + second;
     }
-
 
     @Override
     public int getCount() {

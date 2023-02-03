@@ -46,6 +46,7 @@ public class DatabaseQuery extends SQLiteOpenHelper {
     }
 
     public void getDatabaseRecord(){
+        // String sql = ("CREATE TABLE GamesLog(gameID int PRIMARY KEY, playDate text, playTime text, duration int, winningStatus int); ");
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
         c.moveToFirst();
@@ -75,16 +76,15 @@ public class DatabaseQuery extends SQLiteOpenHelper {
 
         // on below line we are passing all values
         // along with its key and value pair.
-        values.put("word", record.getWord());
-        values.put("iscorrect", record.getIsCorrect());
-        values.put("date", record.getDate());
-        values.put("time", record.getTime());
+        values.put(COLUMN_WORD, record.getWord());
+        values.put(COLUMN_ISCORRECT, record.getIsCorrect());
+        values.put(COLUMN_DATE, record.getDate());
+        values.put(COLUMN_TIME, record.getTime());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_NAME, null, values);
-        //String query = ("INSERT INTO GamesLog('12', 'ok' );");
-        //db.execSQL(query);
     }
+
 
     public void deleteRecord(String id){
         SQLiteDatabase db = this.getWritableDatabase();
